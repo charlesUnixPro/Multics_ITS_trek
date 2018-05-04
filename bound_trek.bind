@@ -1,0 +1,7 @@
+Objectname: bound_trek;
+Addname: trek;
+
+objectname: trek;
+
+objectname: trek_subr;
+synonym: st_date, st_time;

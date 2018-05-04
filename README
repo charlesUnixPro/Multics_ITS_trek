@@ -1,0 +1,27 @@
+Port of ITS trek.
+
+Fixed continuation lines.
+
+Changed "" to " page ".
+
+Date is printed in Multics format (m/d/y), not ITS (dd-mmm-yy)
+
+5 chars/to an int is persvasive throughout the code.
+
+   BNAME: was 5 chars, is now 4
+
+
+http://www.bitsavers.org/pdf/dec/vax/lang/fortran/AA-Y868C-TK_FORTRAN-10_20_and_VAX_FORTRAN_Compatibility_Manual_Feb87.pdf
+
+
+DATE CALL DATE (I(2)) retuns 'dd-mmm-yy '
+TIME - 1st arg. "hh:mm" 2nd " ss.t"
+
+OFILE
+
+Open file for writing?
+	CALL OFILE(21,NAME)
+Open file for reading?
+100	CALL IFILE(21,NAME)
+
+
