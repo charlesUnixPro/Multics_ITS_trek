@@ -113,7 +113,10 @@ C	&'FLEET',' ADMI','RAL  '/
 	&  'ADMI','RAL ','    ','    ',
 	&  'FLEE','T AD','MIRA','L   '/
 C cac added
+C	character*8 datestr
+C	character*5 timesrt
 	character*250 datestr
+	character*250 timesrt
 C page C
 	NIN=5
 C cac changed 5 to 6
@@ -237,11 +240,11 @@ C	CALL DATE(TDATE)
 	call st_date (datestr)
 C cac changed
 C	CALL TIME(TIMES)
-	call st_time (timehour, timemin)
+	call st_time (timestr)
 C cac changed
 C	WRITE (NOUT,130) TIMES,TDATE(1),TDATE(2)
 C 130	FORMAT (' CURRENT TIME IS ',A5,' ON ',A5,A4)
-	WRITE (NOUT,130) TIMES, datestr
+	WRITE (NOUT,130) timestr, datestr
 130	FORMAT (' CURRENT TIME IS ',A5,' ON ',a8)
 	IF (GAMES.EQ.0) GO TO 641
 	WRITE (NOUT,642) TOTENE,AVADAT
@@ -403,7 +406,8 @@ C
 222	WRITE (NOUT,221)CURDAT
 221	FORMAT(' STARDATE         ',I4)
 	WRITE (NOUT,223) CDOL
-223	FORMAT(' CONDITION        ',2A5)
+C cac changed 2A5 to 2A4
+223	FORMAT(' CONDITION        ',2A4)
 	WRITE (NOUT,225) QUADRW,QUADCL
 225	FORMAT(' QUADRANT         ',I2,',',I2)
 	WRITE (NOUT,227) SECTRW,SECTCL
@@ -455,7 +459,8 @@ C cac LDOL is groups of 3 now; change 2*R1 to 3*R1
 	R1=3*R1-1
 C cac LDOL is groups of 3 now; add LDOL(R1+2)
 	WRITE (NOUT,243) LDOL(R1),LDOL(R1+1),LDOL(R1+2),PTYROW,PTYCOL
-243	FORMAT('+',2A5,' IN QUADRANT ',I2,',',I2/)
+C cac changed 2A% to 3A4
+243	FORMAT('+',3A4,' IN QUADRANT ',I2,',',I2/)
 	IF (PRTY.NE.1) GO TO 257
 245	DELTAY=QUADRW-PTYROW
 	DELTAX=PTYCOL-QUADCL
@@ -619,7 +624,8 @@ C cac changed 'F' to 'F10.0'
 315	FORMAT(' *** SPACE STORM,  ',$)
 C cac changed '1,3' to '1,4'
 	WRITE (NOUT,316) (DAMSTR(I,R1),I=1,4)
-316	FORMAT('+',3A5,' DAMAGED ***')
+C cac changed 3A5 to 4A4
+316	FORMAT('+',4A4,' DAMAGED ***')
 	GO TO 335
 318	CALL SB320
 330	IF (RAN(XXX).GT..03) GO TO 335
@@ -849,7 +855,8 @@ C
 	IF (DAMAGE(I).EQ.0.) GO TO 492
 C cac changed '1,3' to '1,4'
 	WRITE (NOUT,491) (DAMSTR(J,I),J=1,4),DAMAGE(I)
-491	FORMAT(1X,3A5,7X,F10.4)
+C cac changed 3A5 to 4A4
+491	FORMAT(1X,4A4,7X,F10.4)
 	L=1
 492	CONTINUE
 	IF (L.EQ.1) GO TO 495
@@ -1120,18 +1127,23 @@ C
 672	FORMAT (' YOU HAVE BEEN PROMOTED TO ',$)
 C cac changed J=1,3 to J=1,4
 	WRITE (NOUT,673) (RANKS(J,I), J=1,4)
-C cac changed 5A5 to 4A4; not sure why it wasn't 4A4, probably a typo
-673	FORMAT ('+',5A5)
-C changed (5,677,TIMES) to (TIMES,677)
-675	DECODE (TIMES, 677) HR1,MIN1
+C cac changed 5A5 to 4A4; not sure why it wasn't 3A5, probably a typo
+673	FORMAT ('+',4A4)
+C changed (5,677,TIMES) to (timestr,677)
+675	DECODE (timestr, 677) HR1,MIN1
 677	FORMAT (I2,1X,I2)
 	TT=TT-(HR1+MIN1/60.)
-	CALL TIME(TIMEF)
-C changed (5,677,TIMEF) to (TIMEF,677)
-	DECODE (TIMEF,677) HR2,MIN1
+C cac changed
+C	CALL TIME(TIMEF)
+	call st_time (timestr)
+C changed (5,677,TIMEF) to (timestr,677)
+	DECODE (timestr,677) HR2,MIN1
 	TT=TT+HR2+MIN1/60.
 	IF (HR2.LT.HR1) TT=TT+12.
-	WRITE (NOUT,678) TIMEF,TT
+C cac changed
+C	WRITE (NOUT,678) TIMEF,TT
+C 678	FORMAT (' IT IS NOW ',A5,'.  YOU HAVE SPENT ',
+	WRITE (NOUT,678) timestr,TT
 678	FORMAT (' IT IS NOW ',A5,'.  YOU HAVE SPENT ',
 	&F4.2,' HOURS PLAYING STARTREK!')
 	WRITE (NOUT,664)
@@ -1259,7 +1271,9 @@ C cac changed J=1,3 to J=1,4
 1311	FORMAT (' YOUR INCOMING RATING IS ',F6.1/
 	&' YOUR RANK: ',5A5)
 	IF (GALSIZ.EQ.0) GO TO 85
-	CALL TIME(TIMES)
+C cac changed
+C	CALL TIME(TIMES)
+	call st_time (timestr)
 	GO TO 222
 C
 1330	WRITE (NOUT,1335)

@@ -6,6 +6,8 @@ trek_subr: proc;
     dcl 1 tv like time_value;
     dcl date_time_$format         entry (char(*), fixed bin(71), char(*), char(*))
                     returns(char(250) var);
+    dcl ioa_            entry options (variable);
+
 
 
 /* returns 'dd-mmm-yy" */
@@ -22,7 +24,6 @@ st_date: entry (d);
     end;
 */
     d = date_time_$format ("^my/^dm/^yc", clock_(), "", "");
-
     return;
 
 st_time: entry (t);
@@ -38,7 +39,7 @@ st_time: entry (t);
     end;
 */
 
-    t = date_time_$format ("^Hd:^MH", clock_(), "", "");
+    t =date_time_$format ("^Hd:^MH", clock_(), "", "");
     return;
 
 %include time_value;
