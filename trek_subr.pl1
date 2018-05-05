@@ -9,37 +9,15 @@ trek_subr: proc;
     dcl ioa_            entry options (variable);
 
 
-
-/* returns 'dd-mmm-yy" */
 st_date: entry (d);
     dcl d char (*);
 
-/*
-    tv.version = Vtime_value_3;
-    call date_time_$from_clock (clock_ (), "", addr(tv), code);
-
-    if code ^= 0
-    then do;
-      call sub_err_ (code, "from_clock failed");
-    end;
-*/
     d = date_time_$format ("^my/^dm/^yc", clock_(), "", "");
     return;
 
 st_time: entry (t);
     dcl t char (*);
-
-/*
-    tv.version = Vtime_value_3;
-    call date_time_$from_clock (clock_ (), "", addr(tv), code);
-
-    if code ^= 0
-    then do;
-      call sub_err_ (code, "from_clock failed");
-    end;
-*/
-
-    t =date_time_$format ("^Hd:^MH", clock_(), "", "");
+    t = date_time_$format ("^Hd:^MH", clock_(), "", "");
     return;
 
 %include time_value;
