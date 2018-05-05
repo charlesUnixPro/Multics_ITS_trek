@@ -1,5 +1,47 @@
 Port of ITS trek.
 
+Bugs
+====
+
+
+   Bug in original code:
+
+     The compiler reports
+
+       WARNING 43
+       comand has been referenced but not set.
+
+     The offending line:
+
+        IF (COMAND.EQ.0) BUSED=BUSED+1
+
+     COMAND is not referenced anywhere in SB171; BUSED is the count
+     of visited starbases. Because it will never be incremented the
+     count will stay 0 and be reported as such, and the calculation
+     of REUSED (resource utilization factor) will be incorrect.
+     COMAND is used in the main program; a value of 0 indicates a
+     command to engage warp engines, this may be the same as leaving
+     dock. If so, either placing COMAND in common or passing it in
+     as a parameter would fix the issue.
+
+  Bug in the port:
+
+     The code to read the target quadrant and the target sector use
+     code like:
+
+                  WRITE (NOUT,1420)
+        1420      FORMAT (' TARGET QUADRANT: ',$)
+                  READ (NIN,1426,ERR=1415) R1,R2
+        1425      FORMAT(2I)
+
+     Used the format (2I) to do a free-form read; this is not supported
+     in Multics. Either two read commands, or some code to parse the 
+     free form input is needed.
+
+
+Changes
+=======
+   
 Fixed continuation lines.
 
 Changed "" to " page ".
@@ -8,20 +50,37 @@ Date is printed in Multics format (m/d/y), not ITS (dd-mmm-yy)
 
 5 chars/to an int is persvasive throughout the code.
 
-   BNAME: was 5 chars, is now 4
+   NAME, DOCKED, BNAME, YES, NO, GREEN, AMBER, RED: was A5,  is now A4
+   RANKS, DAMSTR: was 3A5, now 4A4
+   LDOL: was 2A5, now 3A4
+   CDOL: was 2A5, now 2A4
+   MESSSGE: was 4A5, not 5A4
+ 
+Moved COMMON DATA to BLOCK DATA.
 
+Changed NOUT from 5 to 6.
+
+Added datestr, timestr. Replaced DATE() and TIME() with st_date, st_time.
+
+Replaced code to seed random number generator with 
+
+	call random_$set_seed (clock_())
+
+Changed read of COMAND format from (I) to (I10)
+
+Changed read of WARP format from (F) to (F10.0)
+
+Changed read of R1, R2 format from (2I) to (2I2)
+
+Replaced 'CALL IFILE(...)' and 'CALL OFILE (...)' with OPEN (...)
+
+Moved DAMSTR from blank common to /DAMSTR/
+
+Added a RAN() implementation.
 
 http://www.bitsavers.org/pdf/dec/vax/lang/fortran/AA-Y868C-TK_FORTRAN-10_20_and_VAX_FORTRAN_Compatibility_Manual_Feb87.pdf
 
 
-DATE CALL DATE (I(2)) retuns 'dd-mmm-yy '
-TIME - 1st arg. "hh:mm" 2nd " ss.t"
-
-OFILE
-
-Open file for writing?
-	CALL OFILE(21,NAME)
-Open file for reading?
-100	CALL IFILE(21,NAME)
-
+  CALL DATE (I(2)) returns 'dd-mmm-yy '
+  CALL TIME - 1st arg. "hh:mm" 2nd " ss.t"
 
